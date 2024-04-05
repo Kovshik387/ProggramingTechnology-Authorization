@@ -11,7 +11,8 @@ public interface IAccountDao {
     public void update(Account account) throws SQLException;
     public Account get(int id) throws SQLException;
     public Collection<Account> getAll() throws SQLException;
-    public Account getByLogin(SignInRequest account) throws SQLException;
+    public Account getByLogin(String login) throws SQLException;
+    public Account getByCredits(SignInRequest account) throws SQLException;
     public int accountExist(String email) throws SQLException;
     public void delete(int id) throws SQLException;
 }

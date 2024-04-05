@@ -5,10 +5,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class SignUpResponse {
+public class AccountResponse {
     private int id;
     private int role;
-    private String accessToken;
-    private String refreshToken;
-    private String errorMessage;
 }

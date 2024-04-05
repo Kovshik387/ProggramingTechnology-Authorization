@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -12,16 +14,16 @@ import lombok.NoArgsConstructor;
 //@Table(name = "accounts")
 @Builder
 public class Account {
-//    @Column(name = "account_id")
     private int id;
-//    @Column(name = "name")
-    private String name;
-//    @Column(name = "email")
+    private String firstName;
+    private String surname;
+    private String lastName;
     private String email;
-//    @Column(name = "password_hash")
     private String passwordHash;
-//    @Column(name = "refresh_token")
-    private String refreshToken;
-//    @Column(name = "role_type")
-    private String roleType;
+    private Date createdAt;
+    private Date updatedAt;
+    private int role;
+    private int activityStatus;
+    private boolean isDeleted;
+    private int currentEvent;
 }

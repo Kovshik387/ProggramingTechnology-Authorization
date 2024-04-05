@@ -1,6 +1,7 @@
 package com.auth.ProgrammingTechnology.Authorization.services;
 
 import com.auth.ProgrammingTechnology.Authorization.dal.model.Account;
+import com.auth.ProgrammingTechnology.Authorization.dal.model.response.AccountResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,9 +16,11 @@ import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 //Логирование через lombok
 @Slf4j
@@ -38,7 +41,7 @@ public class TokenManager {
                 .setSubject(account.getEmail())
                 .setExpiration(expire)
                 .signWith(accessSecret)
-                .claim("roles",account.getRoleType())
+                .claim("roles",account.getRole())
                 .claim("id",account.getId())
                 .compact()
                 ;
@@ -96,4 +99,10 @@ public class TokenManager {
                 .getBody();
     }
 
+    public boolean checkRefreshExpire(@NonNull String token){
+        var claims = getRefreshClaims(token);
+        var expire = Calendar.getInstance();
+        expire.add(Calendar.DAY_OF_MONTH, -1);
+        return claims.getExpiration().getTime() < expire.getTime().getTime();
+    }
 }
