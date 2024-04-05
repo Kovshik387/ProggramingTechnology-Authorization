@@ -23,10 +23,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
     private static final String AUTHORIZATION = "Authorization";
-
     @Autowired
     private final TokenManager jwtProvider;
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc)
             throws IOException, ServletException {

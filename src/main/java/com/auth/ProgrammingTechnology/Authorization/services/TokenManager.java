@@ -41,8 +41,8 @@ public class TokenManager {
                 .setSubject(account.getEmail())
                 .setExpiration(expire)
                 .signWith(accessSecret)
-                .claim("roles",account.getRole())
-                .claim("id",account.getId())
+//                .claim("roles",account.getRole())
+//                .claim("id",account.getId())
                 .compact()
                 ;
     }
