@@ -1,6 +1,7 @@
 package com.auth.ProgrammingTechnology.Authorization.services;
 
 import com.auth.ProgrammingTechnology.Authorization.dal.model.Account;
+import com.auth.ProgrammingTechnology.Authorization.dal.model.AuthAccount;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.AccountResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -35,7 +36,7 @@ public class TokenManager {
         this.refreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(refreshSecret));
     }
     //Генерация access токена
-    public String generateJwtToken(@NonNull Account account){
+    public String generateJwtToken(@NonNull AuthAccount account){
         var expire = Date.from(LocalDateTime.now().plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .setSubject(account.getEmail())
@@ -47,7 +48,7 @@ public class TokenManager {
                 ;
     }
     //Генерация refresh токена
-    public String generateRefreshToken(@NonNull Account account){
+    public String generateRefreshToken(@NonNull AuthAccount account){
         var expire = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .setSubject(account.getEmail())

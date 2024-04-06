@@ -5,10 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @Builder
 @Data
 public class SignInResponse {
-    private int id;
+    private String id;
     private int role;
     private String accessToken;
     private String refreshToken;
