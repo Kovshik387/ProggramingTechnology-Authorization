@@ -40,8 +40,10 @@ public class AuthService {
             return SignInResponse.builder().errorMessage("Неверный пароль").build();
         }
 
-        final String accessToken = tokenManager.generateJwtToken(account);
-        final String refreshToken = tokenManager.generateRefreshToken(account);
+        final String accessToken = tokenManager.generateJwtToken(account.getEmail());
+        final String refreshToken = tokenManager.generateRefreshToken(account.getEmail());
+
+        account.setRefreshToken(refreshToken); accountRepository.save(account);
 
         return SignInResponse.builder().
                 accessToken(accessToken).
@@ -50,7 +52,6 @@ public class AuthService {
                 role(account.getRole()).
                 build();
     }
-
     public AccountResponse getInfo(@NonNull String token) throws SQLException {
         var claims = tokenManager.getAccessClaims(token);
         var email = claims.getSubject();
@@ -62,6 +63,11 @@ public class AuthService {
     }
 
     public SignUpResponse<Account> signUp(@NonNull SignUpRequest request) throws SQLException {
+        var exist = accountRepository.findByEmailAddress(request.getEmail());
+        if (exist != null) {
+            return SignUpResponse.<Account>builder().errorMessage("Пользователь с данной почтой уже существует").build();
+        }
+
         var account = Account.builder().
                 id(UUID.randomUUID()).
                 firstName(request.getFirstName()).
@@ -76,21 +82,19 @@ public class AuthService {
                 updatedAt(new Timestamp(new Date().getTime())).
                 build();
 
-        var exist = accountRepository.findByEmailAddress(request.getEmail());
-
-        if (exist != null) return SignUpResponse.<Account>builder().errorMessage("Пользователь с данной почтой уже существует").build();
+        final String accessToken = tokenManager.generateJwtToken(account.getEmail());
+        final String refreshToken = tokenManager.generateRefreshToken(account.getEmail());
 
         var authAccount = AuthAccount.builder().
                 id(account.getId().toString()).
                 role(account.getRole()).
                 email(account.getEmail()).
                 password_hash(account.getPasswordHash()).
+                refreshToken(refreshToken).
                 build();
 
         accountRepository.save(authAccount);
 
-        final String accessToken = tokenManager.generateJwtToken(authAccount);
-        final String refreshToken = tokenManager.generateRefreshToken(authAccount);
         return SignUpResponse.<Account>builder().
                 accessToken(accessToken).
                 refreshToken(refreshToken).
@@ -106,14 +110,19 @@ public class AuthService {
             var email = claims.getSubject();
             if (tokenManager.validateRefreshToken(refreshToken)) {
                 var account = accountRepository.findByEmailAddress(email);
-                var accessToken = tokenManager.generateJwtToken(account);
+
+                if (!account.getRefreshToken().equals(refreshToken)){
+                    return new JwtResponse(null,null,"Токен устарел");
+                }
+
+                var accessToken = tokenManager.generateJwtToken(account.getEmail());
 
                 if (tokenManager.checkRefreshExpire(refreshToken)){
-                    return new JwtResponse(accessToken,tokenManager.generateRefreshToken(account));
+                    return new JwtResponse(accessToken,tokenManager.generateRefreshToken(account.getEmail()),null);
                 }
-                return new JwtResponse(accessToken, refreshToken);
+                return new JwtResponse(accessToken, refreshToken,"");
             }
         }
-        return new JwtResponse(null, null);
+        return new JwtResponse(null, null,"Невалидный токен");
     }
 }

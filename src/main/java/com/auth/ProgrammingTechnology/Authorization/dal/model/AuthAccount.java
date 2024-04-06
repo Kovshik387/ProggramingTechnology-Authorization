@@ -25,4 +25,6 @@ public class AuthAccount {
     private String password_hash;
     @Column(name = "role")
     private int role;
+    @Column(name = "refresh_token")
+    private String refreshToken;
 }

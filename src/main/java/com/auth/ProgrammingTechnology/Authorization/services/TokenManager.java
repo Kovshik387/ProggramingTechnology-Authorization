@@ -36,10 +36,10 @@ public class TokenManager {
         this.refreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(refreshSecret));
     }
     //Генерация access токена
-    public String generateJwtToken(@NonNull AuthAccount account){
+    public String generateJwtToken(@NonNull String email){
         var expire = Date.from(LocalDateTime.now().plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
-                .setSubject(account.getEmail())
+                .setSubject(email)
                 .setExpiration(expire)
                 .signWith(accessSecret)
 //                .claim("roles",account.getRole())
@@ -48,10 +48,10 @@ public class TokenManager {
                 ;
     }
     //Генерация refresh токена
-    public String generateRefreshToken(@NonNull AuthAccount account){
+    public String generateRefreshToken(@NonNull String email){
         var expire = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
-                .setSubject(account.getEmail())
+                .setSubject(email)
                 .setExpiration(expire)
                 .signWith(refreshSecret)
                 .compact();
@@ -99,11 +99,11 @@ public class TokenManager {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
+    //Проверка срока жизни refresh token'а
     public boolean checkRefreshExpire(@NonNull String token){
         var claims = getRefreshClaims(token);
         var expire = Calendar.getInstance();
-        expire.add(Calendar.DAY_OF_MONTH, -1);
+        expire.add(Calendar.HOUR_OF_DAY, -10);
         return claims.getExpiration().getTime() < expire.getTime().getTime();
     }
 }
