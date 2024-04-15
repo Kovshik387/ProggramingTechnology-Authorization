@@ -1,8 +1,6 @@
 package com.auth.ProgrammingTechnology.Authorization.services;
 
-import com.auth.ProgrammingTechnology.Authorization.dal.model.Account;
-import com.auth.ProgrammingTechnology.Authorization.dal.model.AuthAccount;
-import com.auth.ProgrammingTechnology.Authorization.dal.model.response.AccountResponse;
+import com.auth.ProgrammingTechnology.Authorization.services.Infastructure.TokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -17,8 +15,6 @@ import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -26,12 +22,12 @@ import java.util.Date;
 //Логирование через lombok
 @Slf4j
 @Component
-public class TokenManager {
+public class TokenManagerImpl implements TokenManager {
     //Секреты
     private final SecretKey accessSecret;
     private final SecretKey refreshSecret;
 
-    public TokenManager(@Value ("${secret.access}") String accessSecret, @Value("${secret.refresh}") String refreshSecret ){
+    public TokenManagerImpl(@Value ("${secret.access}") String accessSecret, @Value("${secret.refresh}") String refreshSecret ){
         this.accessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessSecret));
         this.refreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(refreshSecret));
     }

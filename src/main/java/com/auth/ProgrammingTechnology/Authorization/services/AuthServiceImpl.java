@@ -8,6 +8,7 @@ import com.auth.ProgrammingTechnology.Authorization.dal.model.response.JwtRespon
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignInResponse;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignUpResponse;
 import com.auth.ProgrammingTechnology.Authorization.dal.repository.AccountRepository;
+import com.auth.ProgrammingTechnology.Authorization.services.Infastructure.AuthService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,13 +21,13 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
     @Autowired
     private final AccountRepository accountRepository;
     @Autowired
-    private final TokenManager tokenManager;
+    private final TokenManagerImpl tokenManager;
     private final String hash;
-    public AuthService(AccountRepository accountRepository, TokenManager tokenManager, @Value("${password.hash}") int salt) {
+    public AuthServiceImpl(AccountRepository accountRepository, TokenManagerImpl tokenManager, @Value("${password.hash}") int salt) {
         this.accountRepository = accountRepository;
         this.tokenManager = tokenManager;
         this.hash = BCrypt.gensalt(salt);

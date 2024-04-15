@@ -4,7 +4,7 @@ import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignInRequ
 import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignUpRequest;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignInResponse;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignUpResponse;
-import com.auth.ProgrammingTechnology.Authorization.services.AuthService;
+import com.auth.ProgrammingTechnology.Authorization.services.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 @RequestMapping("api/")
 public class AuthController {
     @Autowired
-    private final AuthService authorizationService;
+    private final AuthServiceImpl authorizationService;
     @PostMapping("SignUp")
     public ResponseEntity<SignUpResponse> signUp(SignUpRequest request) throws SQLException {
         return ResponseEntity.ok(authorizationService.signUp(request));

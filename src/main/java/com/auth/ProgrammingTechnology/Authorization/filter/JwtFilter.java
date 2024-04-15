@@ -1,7 +1,7 @@
 package com.auth.ProgrammingTechnology.Authorization.filter;
 
 import com.auth.ProgrammingTechnology.Authorization.dal.model.JwtAuth;
-import com.auth.ProgrammingTechnology.Authorization.services.TokenManager;
+import com.auth.ProgrammingTechnology.Authorization.services.TokenManagerImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,7 +24,7 @@ import java.io.IOException;
 public class JwtFilter extends GenericFilterBean {
     private static final String AUTHORIZATION = "Authorization";
     @Autowired
-    private final TokenManager jwtProvider;
+    private final TokenManagerImpl jwtProvider;
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc)
             throws IOException, ServletException {
