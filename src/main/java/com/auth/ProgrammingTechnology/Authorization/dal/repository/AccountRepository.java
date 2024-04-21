@@ -1,6 +1,5 @@
 package com.auth.ProgrammingTechnology.Authorization.dal.repository;
 
-import com.auth.ProgrammingTechnology.Authorization.dal.model.Account;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.AuthAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

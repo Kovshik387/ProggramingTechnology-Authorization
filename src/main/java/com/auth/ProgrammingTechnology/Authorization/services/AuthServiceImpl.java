@@ -10,6 +10,7 @@ import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignUpRes
 import com.auth.ProgrammingTechnology.Authorization.dal.repository.AccountRepository;
 import com.auth.ProgrammingTechnology.Authorization.services.Infastructure.AuthService;
 import com.auth.ProgrammingTechnology.Authorization.services.validation.ValidationEmail;
+import com.auth.ProgrammingTechnology.Authorization.services.validation.ValidationPassword;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 @Slf4j
 @Service
@@ -31,11 +33,14 @@ public class AuthServiceImpl implements AuthService {
     private final TokenManagerImpl tokenManager;
     @Autowired
     private ValidationEmail validationEmail;
+    @Autowired
+    private ValidationPassword validationPassword;
     private final String hash;
-    public AuthServiceImpl(AccountRepository accountRepository, TokenManagerImpl tokenManager, ValidationEmail validationEmail, ValidationEmail validationEmail1, @Value("${password.hash}") int salt) {
+    public AuthServiceImpl(AccountRepository accountRepository, TokenManagerImpl tokenManager, ValidationPassword validationPassword, ValidationEmail validationEmail1, @Value("${password.hash}") int salt) {
         this.accountRepository = accountRepository;
         this.tokenManager = tokenManager;
         this.validationEmail = validationEmail1;
+        this.validationPassword = validationPassword;
         this.hash = BCrypt.gensalt(salt);
     }
     public SignInResponse signIn(@NonNull SignInRequest request) throws Exception {
@@ -72,14 +77,15 @@ public class AuthServiceImpl implements AuthService {
     public SignUpResponse<Account> signUp(@NonNull SignUpRequest request) throws SQLException {
         var exist = accountRepository.findByEmailAddress(request.getEmail());
         if (exist != null) {
-            return SignUpResponse.<Account>builder().errorMessage("Пользователь с данной почтой уже существует").build();
+            return SignUpResponse.<Account>builder().errorMessage(List.of("Пользователь с данной почтой уже существует")).build();
         }
 
         var errors = new ArrayList<String>();
         validationEmail.setValue(request.getEmail()); validationEmail.setErrorMessage(errors); validationEmail.checkValidationRules();
+        validationPassword.setValue(request.getPassword()); validationPassword.setErrorMessage(errors); validationPassword.checkValidationRules();
 
         if (!errors.isEmpty()){
-            return SignUpResponse.<Account>builder().errorMessage(errors.get(0)).build();
+            return SignUpResponse.<Account>builder().errorMessage(errors).build();
         }
 
         var account = Account.builder().
