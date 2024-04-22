@@ -1,8 +1,8 @@
 package com.auth.ProgrammingTechnology.Authorization.services;
 
 import com.auth.ProgrammingTechnology.Authorization.dal.model.*;
-import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignInRequest;
-import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignUpRequest;
+import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignInDto;
+import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignUpDto;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.AccountResponse;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.JwtResponse;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignInResponse;
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         this.validationPassword = validationPassword;
         this.hash = BCrypt.gensalt(salt);
     }
-    public SignInResponse signIn(@NonNull SignInRequest request) throws Exception {
+    public SignInResponse signIn(@NonNull SignInDto request) throws Exception {
         var account = accountRepository.findByEmailAddress(request.getEmail());
 
         if (account == null) return SignInResponse.builder().errorMessage("Пользователь не найден").build();
@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
                 build();
     }
 
-    public SignUpResponse<Account> signUp(@NonNull SignUpRequest request) throws SQLException {
+    public SignUpResponse<Account> signUp(@NonNull SignUpDto request) throws SQLException {
         var exist = accountRepository.findByEmailAddress(request.getEmail());
         if (exist != null) {
             return SignUpResponse.<Account>builder().errorMessage(List.of("Пользователь с данной почтой уже существует")).build();

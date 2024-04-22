@@ -1,7 +1,7 @@
 package com.auth.ProgrammingTechnology.Authorization.controller;
 
-import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignInRequest;
-import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignUpRequest;
+import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignInDto;
+import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignUpDto;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignInResponse;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignUpResponse;
 import com.auth.ProgrammingTechnology.Authorization.services.AuthServiceImpl;
@@ -19,11 +19,11 @@ public class AuthController {
     @Autowired
     private final AuthServiceImpl authorizationService;
     @PostMapping("SignUp")
-    public ResponseEntity<SignUpResponse> signUp(SignUpRequest request) throws SQLException {
+    public ResponseEntity<SignUpResponse> signUp(SignUpDto request) throws SQLException {
         return ResponseEntity.ok(authorizationService.signUp(request));
     }
     @GetMapping("SignIn")
-    public ResponseEntity<SignInResponse> signIn(SignInRequest request) throws Exception {
+    public ResponseEntity<SignInResponse> signIn(SignInDto request) throws Exception {
         return ResponseEntity.ok(authorizationService.signIn(request));
     }
 }
