@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  auth-service:
+    image: authorization
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8181:8181"
+    depends_on:
+      - postgres-data
+    environment:
+      - SERVER_PORT= 8181
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/books_db
+    networks:
+      - "auth-dev"
+
+  postgres-data:
+    image: postgres:latest
+
+    container_name: postgres-data
+    
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: '123'
+      POSTGRES_DB: 'authorization_db'
+    
+    ports:
+      - "5432:5432"
+    networks:
+      - "auth-dev"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres-data:
+
+networks:
+  auth-dev:
+    driver: bridge

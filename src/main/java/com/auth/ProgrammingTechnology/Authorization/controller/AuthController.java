@@ -1,5 +1,6 @@
 package com.auth.ProgrammingTechnology.Authorization.controller;
 
+import com.auth.ProgrammingTechnology.Authorization.dal.model.Account;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignInDto;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.request.SignUpDto;
 import com.auth.ProgrammingTechnology.Authorization.dal.model.response.SignInResponse;
@@ -19,11 +20,19 @@ public class AuthController {
     @Autowired
     private final AuthServiceImpl authorizationService;
     @PostMapping("SignUp")
-    public ResponseEntity<SignUpResponse> signUp(SignUpDto request) throws SQLException {
-        return ResponseEntity.ok(authorizationService.signUp(request));
+    public ResponseEntity<SignUpResponse<Account>> signUp(SignUpDto request) throws SQLException {
+        var result = authorizationService.signUp(request);
+        if(!result.getErrorMessage().isEmpty()){
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok(result);
     }
     @GetMapping("SignIn")
     public ResponseEntity<SignInResponse> signIn(SignInDto request) throws Exception {
-        return ResponseEntity.ok(authorizationService.signIn(request));
+        var result = authorizationService.signIn(request);
+        if(!result.getErrorMessage().isEmpty()){
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 }
