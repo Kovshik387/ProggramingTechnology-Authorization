@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 @Data
 public class SignInResponse {
-    private String id;
+    private UUID id;
     private int role;
     private String accessToken;
     private String refreshToken;

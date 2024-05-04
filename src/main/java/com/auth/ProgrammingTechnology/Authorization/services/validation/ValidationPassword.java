@@ -15,7 +15,6 @@ public class ValidationPassword {
     public void checkValidationRules(){
         ValidationRule.link(
                 new LengthRule(5, 20,"пароля"),
-                new PrefixRule(),
                 new DigitRule()
         ).check(value, errorMessage);
     }

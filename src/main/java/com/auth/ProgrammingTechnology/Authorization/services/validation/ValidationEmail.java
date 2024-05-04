@@ -14,7 +14,7 @@ public class ValidationEmail {
     private List<String> errorMessage;
     public void checkValidationRules(){
         ValidationRule.link(
-                new LengthRule(5, 20,"почты"),
+                new LengthRule(5, 50,"почты"),
                 new PrefixRule()
         ).check(value, errorMessage);
     }

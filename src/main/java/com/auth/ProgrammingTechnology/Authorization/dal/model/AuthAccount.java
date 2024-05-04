@@ -18,11 +18,13 @@ import java.util.UUID;
 @Entity(name = "auth_accounts")
 public class AuthAccount {
     @Id
-    private String id;
+    private UUID id;
     @Column(name = "email")
     private String email;
     @Column(name = "password_hash")
     private String password_hash;
+    @Column(name = "code")
+    private String code;
     @Column(name = "role")
     private int role;
     @Column(name = "refresh_token")

@@ -20,10 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 @Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -32,13 +30,16 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private final TokenManagerImpl tokenManager;
     @Autowired
+    private MessageServiceImpl messageService;
+    @Autowired
     private ValidationEmail validationEmail;
     @Autowired
     private ValidationPassword validationPassword;
     private final String hash;
-    public AuthServiceImpl(AccountRepository accountRepository, TokenManagerImpl tokenManager, ValidationPassword validationPassword, ValidationEmail validationEmail1, @Value("${password.hash}") int salt) {
+    public AuthServiceImpl(AccountRepository accountRepository, TokenManagerImpl tokenManager, MessageServiceImpl messageService, ValidationPassword validationPassword, ValidationEmail validationEmail1, @Value("${password.hash}") int salt) {
         this.accountRepository = accountRepository;
         this.tokenManager = tokenManager;
+        this.messageService = messageService;
         this.validationEmail = validationEmail1;
         this.validationPassword = validationPassword;
         this.hash = BCrypt.gensalt(salt);
@@ -60,15 +61,6 @@ public class AuthServiceImpl implements AuthService {
         return SignInResponse.builder().
                 accessToken(accessToken).
                 refreshToken(refreshToken).
-                id(account.getId()).
-                role(account.getRole()).
-                build();
-    }
-    public AccountResponse getInfo(@NonNull String token) throws SQLException {
-        var claims = tokenManager.getAccessClaims(token);
-        var email = claims.getSubject();
-        var account = accountRepository.findByEmailAddress(email);
-        return AccountResponse.builder().
                 id(account.getId()).
                 role(account.getRole()).
                 build();
@@ -106,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
         final String refreshToken = tokenManager.generateRefreshToken(account.getEmail());
 
         var authAccount = AuthAccount.builder().
-                id(account.getId().toString()).
+                id(account.getId()).
                 role(account.getRole()).
                 email(account.getEmail()).
                 password_hash(account.getPasswordHash()).
@@ -121,6 +113,62 @@ public class AuthServiceImpl implements AuthService {
                 role(request.getRole()).
                 id(authAccount.getId()).
                 userData(account).
+                build();
+    }
+
+    public String forgetPassword(@NonNull String email){
+        var exist = accountRepository.findByEmailAddress(email);
+
+        if (exist == null) return "Пользователя с данной почтой не существует";
+
+        String code = exist.getCode();
+
+        if (exist.getCode() == null){
+            code = BCrypt.hashpw(exist.getEmail() + exist.getId() ,this.hash);
+            exist.setCode(code);
+            accountRepository.save(exist);
+        }
+
+        if (!messageService.sendMessage(exist,code)){
+             return "Произошла ошибка";
+        }
+
+        return "Письмо отправлено";
+    }
+
+    public String newPassword(@NonNull String code, String newPassword, String confirmPassword){
+        if(!newPassword.equals(confirmPassword)){
+            return "Пароли не совпадают";
+        }
+
+        List<String> errors = new ArrayList<>();
+        validationPassword.setValue(newPassword); validationPassword.setErrorMessage(errors); validationPassword.checkValidationRules();
+
+        var data = code.split("\\.\\.");
+        var uuid = UUID.fromString(data[1]);
+
+        var account = accountRepository.findById(uuid);
+        if (account.isEmpty()){
+            return "Пользователь не найден";
+        }
+        if (!account.get().getCode().equals(data[0])){
+            return "Произошла ошибка";
+        }
+
+        account.get().setPassword_hash(BCrypt.hashpw(newPassword,this.hash));
+        account.get().setCode(null);
+        accountRepository.save(account.get());
+
+        return "Успешно";
+    }
+
+    public AccountResponse getInfo(@NonNull String token) throws SQLException {
+        var claims = tokenManager.getAccessClaims(token);
+        var email = claims.getSubject();
+        var account = accountRepository.findByEmailAddress(email);
+        return AccountResponse.builder().
+                id(account.getId()).
+                role(account.getRole()).
                 build();
     }
 

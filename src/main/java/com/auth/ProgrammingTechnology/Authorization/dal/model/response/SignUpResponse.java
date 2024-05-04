@@ -9,7 +9,7 @@ import java.util.UUID;
 @Builder
 @Data
 public class SignUpResponse<TData> {
-    private String id;
+    private UUID id;
     private int role;
     private String accessToken;
     private String refreshToken;
