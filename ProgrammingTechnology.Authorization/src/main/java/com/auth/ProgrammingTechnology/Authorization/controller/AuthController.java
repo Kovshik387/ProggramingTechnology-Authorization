@@ -40,9 +40,8 @@ public class AuthController {
     public ResponseEntity<String> forgetPassword(String email){
         return ResponseEntity.ok(authorizationService.forgetPassword(email));
     }
-    //NewPassword?code=$2a$10$bz4SG4okFPVn9PuGd634Zuken/F/1.NPKtCQJ3YAB3z7RT5zyWDOy.3a395781-3401-47dc-a9db-3e9b5291acdd
-    @GetMapping("NewPassword")
-    public ResponseEntity<String> newPassword(String code){
-        return ResponseEntity.ok(authorizationService.newPassword(code,"12345","12345"));
+    @PostMapping("NewPassword")
+    public ResponseEntity<String> newPassword(String code,String password,String confirmPassword){
+        return ResponseEntity.ok(authorizationService.newPassword(code,password,confirmPassword));
     }
 }
