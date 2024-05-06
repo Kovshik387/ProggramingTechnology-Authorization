@@ -30,7 +30,7 @@ export default function RestorePasswordPage(){
         }
     }
     
-    async function setNewPassword(id:string ,password: String,confirmPassword: String): Promise<String> {
+    async function setNewPassword(id:String ,password: String,confirmPassword: String): Promise<String> {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', '*');
         const url = `http://localhost:8080/api/NewPassword?code=${id}&password=${password}&confirmPassword=${confirmPassword}`

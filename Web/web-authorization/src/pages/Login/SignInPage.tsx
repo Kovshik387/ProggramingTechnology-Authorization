@@ -53,7 +53,7 @@ export default function SignInPage(){
         const url = `http://localhost:8080/api/SignIn?email=${account.email}&password=${account.password}`
         const response = await fetch(url,{method: 'GET',headers: headers});
         if (!response.ok){
-            
+            alert("Проищошла ошибка");
         }
         return await response.json();
     }
