@@ -1,4 +1,3 @@
-import HeaderNavigation from "@components/Header"
 import { Form, InputGroup} from "react-bootstrap"
 import { Button} from '@mui/material'
 import React from "react";
@@ -36,13 +35,13 @@ export default function RestorePasswordPage(){
         const url = `http://localhost:8080/api/NewPassword?code=${id}&password=${password}&confirmPassword=${confirmPassword}`
         const response = await fetch(url,{method: 'POST',headers: headers});
         if (!response.ok){
-            alert("Произошла ошибка");
+            
         }
         return await response.text();
     }
 
     return <>
-        <HeaderNavigation/>
+    <div style={{flex: 1}}>
         <div style={{alignItems: 'center',display: 'flex',justifyContent: 'center',minHeight: '500px'}}>
             <div style = {{border: "1px solid black", borderRadius: "5px",padding: "20px"}}>
             <h5>Восстановление пароля</h5>
@@ -72,5 +71,6 @@ export default function RestorePasswordPage(){
                 </Form>
             </div>
         </div>
+    </div>
     </>
 }

@@ -12,6 +12,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+body,html, #root {
+  height: 100%;
+}
 /*
 a {
   font-weight: 500;

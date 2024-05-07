@@ -124,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
         String code = exist.getCode();
 
         if (exist.getCode() == null){
-            code = BCrypt.hashpw(exist.getEmail() + exist.getId() ,this.hash);
+            code = BCrypt.hashpw(exist.getEmail() + exist.getId() ,this.hash).replace("/","s");
             exist.setCode(code);
             accountRepository.save(exist);
         }
@@ -143,6 +143,10 @@ public class AuthServiceImpl implements AuthService {
 
         List<String> errors = new ArrayList<>();
         validationPassword.setValue(newPassword); validationPassword.setErrorMessage(errors); validationPassword.checkValidationRules();
+
+        if (!errors.isEmpty()){
+            return errors.get(0);
+        }
 
         var data = code.split("\\.\\.");
         var uuid = UUID.fromString(data[1]);

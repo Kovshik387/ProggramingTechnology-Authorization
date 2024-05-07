@@ -1,5 +1,9 @@
 import { Navbar,Container,Nav} from "react-bootstrap";
 
+export type HeaderProps = {
+  state: [string, React.Dispatch<React.SetStateAction<string>>]
+}
+
 export default function HeaderNavigation(){
   return (
     <>
@@ -9,9 +13,9 @@ export default function HeaderNavigation(){
           <Nav>
             <Navbar.Toggle></Navbar.Toggle>
             {
-              
-              localStorage.getItem("id") == null ?
-              <Navbar.Collapse hidden={localStorage.getItem("id") === undefined } className="justify-content-end">
+              localStorage.getItem("id") === null ?
+
+              <Navbar.Collapse className="justify-content-end">
                   <Nav.Link href="/signIn">Войти</Nav.Link>
                   <Nav.Link href="/signUp">Регистрация</Nav.Link>
               </Navbar.Collapse>
@@ -22,7 +26,10 @@ export default function HeaderNavigation(){
                 <Navbar.Text>
                     Привет! {localStorage.getItem("id")}
                 </Navbar.Text>
-                <Nav.Link href="/logout">Выйти</Nav.Link>
+                <Nav.Link onClick={() => {
+                  localStorage.removeItem("id");
+                  window.location.reload();
+                }} >Выйти</Nav.Link>
               </Navbar.Collapse>
             }
           </Nav>

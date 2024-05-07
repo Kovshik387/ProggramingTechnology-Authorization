@@ -1,9 +1,8 @@
-import HeaderNavigation from "@components/Header"
 import { Container,Form, InputGroup} from "react-bootstrap"
 import { Button} from '@mui/material'
 import { Eye,EyeSlashFill } from "react-bootstrap-icons"
-import React from "react";
 import {useNavigate } from 'react-router-dom'
+import React from "react";
 
 export type AuthAccount = {
     email: string,
@@ -43,7 +42,9 @@ export default function SignInPage(){
             localStorage.setItem("id",data.id!.toString());
             localStorage.setItem("accessToken",data.accessToken!);
             localStorage.setItem("refreshToken",data.refreshToken!);
+
             navigate('/');
+            window.location.reload()
         }
     }
 
@@ -61,7 +62,7 @@ export default function SignInPage(){
     if(localStorage.getItem('id') != null) navigate('/');
 
     return <>
-        <HeaderNavigation/>
+    <div style={{flex: 1}}>
         <Container fluid="md">
             <div style={{alignItems: 'center',display: 'flex',justifyContent: 'center',minHeight: '500px'}}>
                 <div style = {{border: "1px solid black", borderRadius: "5px",padding: "20px"}}>
@@ -95,7 +96,7 @@ export default function SignInPage(){
                     </Form>
                 </div>
             </div>
-        </Container>
+        </Container>    
+    </div>
     </>
 }
-

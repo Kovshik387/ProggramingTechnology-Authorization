@@ -2,11 +2,14 @@ import * as ReactRouter from "react-router-dom";
 import AuthorizationPage from '@pages/AuthorizationPage';
 import SignInPage from '@pages/Login/SignInPage';
 import SignUpPage from "@pages/Login/SignUpPage";
-import LogoutPage from "@pages/Login/LogoutPage";
 import RememberPasswordPage from "@pages/RestorePasssword/RememberPasswordPage";
 import RestorePasswordPage from "@pages/RestorePasssword/RestorePasswordPage"
+import HeaderNavigation from "@components/Header"
+import Footer from "@components/Footer";
+
 
 export default function App(){
+	
 	const router = ReactRouter.createBrowserRouter([
 		{
 			path: '/',
@@ -21,10 +24,6 @@ export default function App(){
 			element: <SignUpPage/>
 		},
 		{
-			path: '/logout',
-			element: <LogoutPage/>
-		},
-		{
 			path: '/forgotPassword',
 			element: <RememberPasswordPage/>
 		},
@@ -34,6 +33,20 @@ export default function App(){
 		}
 	]);
 	return (
-		<ReactRouter.RouterProvider router={router} />
+		<div style={mainContent}>
+			<HeaderNavigation/>
+			<ReactRouter.RouterProvider router={router} />
+			<Footer/>
+		</div>
 	);
+	
+
+}
+const mainContent : React.CSSProperties = {
+	display: "flex",
+	justifyContent: "flex-end",
+	flexDirection: "column",
+	width: "100%",
+	height: "100%",
+	flex: 1
 }

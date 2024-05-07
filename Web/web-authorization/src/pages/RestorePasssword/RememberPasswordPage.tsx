@@ -1,4 +1,3 @@
-import HeaderNavigation from "@components/Header"
 import { Form, InputGroup} from "react-bootstrap"
 import { Button} from '@mui/material'
 import React from "react";
@@ -35,7 +34,7 @@ export default function RememberPasswordPage(){
     }
 
     return <>
-        <HeaderNavigation/>
+    <div style={{flex: 1}}>
         <div style={{alignItems: 'center',display: 'flex',justifyContent: 'center',minHeight: '500px'}}>
             <div style = {{border: "1px solid black", borderRadius: "5px",padding: "20px"}}>
             <h5>Восстановление пароля</h5>
@@ -56,5 +55,6 @@ export default function RememberPasswordPage(){
                 </Form>
             </div>
         </div>
+    </div>
     </>
 }

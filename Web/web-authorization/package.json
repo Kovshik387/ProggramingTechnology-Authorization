@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coreui/coreui": "^5.0.0",
+    "@coreui/react": "^5.0.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.16",
@@ -17,6 +19,7 @@
     "@types/node": "^20.12.8",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
+    "flowbite-react": "^0.9.0",
     "node": "^22.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",

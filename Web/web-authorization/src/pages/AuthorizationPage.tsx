@@ -2,8 +2,9 @@ import HeaderNavigation from "@components/Header"
 
 export default function AuthorizationPage(){
     return <>
-        <HeaderNavigation/>
+    <div style={{flex: 1}}>
         <h1 style={CenterText}>Добро пожаловать</h1>
+    </div>
     </>
 }
 
