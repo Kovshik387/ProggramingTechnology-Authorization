@@ -26,9 +26,9 @@ export default function SignInPage(){
     const [email,setEmail] = React.useState("");
     const [password,setPassword] = React.useState("");
 
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleSubmit = async (event:  React.SyntheticEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
         
         const account: AuthAccount =  {email: email,password: password};
         const data = await signIn(account);
@@ -66,7 +66,7 @@ export default function SignInPage(){
         <Container fluid="md">
             <div style={{alignItems: 'center',display: 'flex',justifyContent: 'center',minHeight: '500px'}}>
                 <div style = {{border: "1px solid black", borderRadius: "5px",padding: "20px"}}>
-                    <p>Авторизация</p>
+                    <h3>Авторизация</h3>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="email">
                             <Form.Label>Почта</Form.Label>
