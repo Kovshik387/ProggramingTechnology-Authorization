@@ -20,7 +20,7 @@ public class AuthController {
     @Autowired
     private final AuthServiceImpl authorizationService;
     @PostMapping("SignUp")
-    public ResponseEntity<SignUpResponse<Account>> signUp(SignUpDto request) throws SQLException {
+    public ResponseEntity<SignUpResponse<Account>> signUp(@RequestBody SignUpDto request) throws SQLException {
         var result = authorizationService.signUp(request);
         if(result.getErrorMessage() != null){
             return ResponseEntity.badRequest().body(result);
