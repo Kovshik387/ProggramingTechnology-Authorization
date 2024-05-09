@@ -44,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
         this.validationPassword = validationPassword;
         this.hash = BCrypt.gensalt(salt);
     }
+
     public SignInResponse signIn(@NonNull SignInDto request) throws Exception {
         var account = accountRepository.findByEmailAddress(request.getEmail());
 
