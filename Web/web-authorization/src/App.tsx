@@ -6,6 +6,7 @@ import RememberPasswordPage from "@pages/RestorePasssword/RememberPasswordPage";
 import RestorePasswordPage from "@pages/RestorePasssword/RestorePasswordPage"
 import HeaderNavigation from "@components/Header"
 import Footer from "@components/Footer";
+import ConfirmPage from "@pages/Login/ConfirmPage";
 
 
 export default function App(){
@@ -30,7 +31,12 @@ export default function App(){
 		{
 			path: '/p/:code',
 			element: <RestorePasswordPage/>,
+		},
+		{
+			path: '/c/:code',
+			element: <ConfirmPage/>
 		}
+
 	]);
 	return (
 		<div style={mainContent}>

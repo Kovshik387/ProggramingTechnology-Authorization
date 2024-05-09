@@ -34,6 +34,7 @@ export default function SignInPage(){
         const data = await signIn(account);
 
         if(data.errorMessage != null){
+            console.log(data.errorMessage);
             if(data.errorMessage.match("пароль")){
                 setErrorPassword(data.errorMessage);
             }
@@ -53,9 +54,6 @@ export default function SignInPage(){
         headers.set('Access-Control-Allow-Origin', '*');
         const url = `http://localhost:8080/api/SignIn?email=${account.email}&password=${account.password}`
         const response = await fetch(url,{method: 'GET',headers: headers});
-        if (!response.ok){
-            alert("Проищошла ошибка");
-        }
         return await response.json();
     }
 
