@@ -3,7 +3,6 @@ package com.auth.ProgrammingTechnology.Authorization.dal.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +24,10 @@ public class AuthAccount {
     private String password_hash;
     @Column(name = "code")
     private String code;
+    @Column(name = "confirm_code")
+    private String confirmCode;
+    @Column (name = "confirm")
+    private Boolean confirm;
     @Column(name = "role")
     private int role;
     @Column(name = "refresh_token")

@@ -1,10 +1,8 @@
 import {useNavigate } from 'react-router-dom'
-import { Col, Container,Form, FormControl, InputGroup, Row} from "react-bootstrap"
+import { Col, Container,Form,InputGroup, Row} from "react-bootstrap"
 import { Button} from '@mui/material'
 import { Eye,EyeSlashFill } from "react-bootstrap-icons"
 import React from 'react';
-import { Select } from 'flowbite-react';
-
 export type AuthRequest = {
     firstName: String,
     lastName: String,
@@ -45,9 +43,6 @@ export default function SignInPage(){
             "password": userData.password,
             "role": userData.role 
         })});
-        if (!response.ok){
-            alert("Произошла ошибка");
-        }
         return await response.json();
     }
 
@@ -80,9 +75,9 @@ export default function SignInPage(){
             window.alert(response.errorMessage![0].toString());
         }
         else{
-            localStorage.setItem("id",response.id!.toString());
-            navigate('/');
-            window.location.reload()
+            //localStorage.setItem("id",response.id!.toString());
+            window.alert("На почту выслано письмо для подтверждения почты");
+            navigate('/signIn');
         }
     }
 

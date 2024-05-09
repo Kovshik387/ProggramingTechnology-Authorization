@@ -44,4 +44,9 @@ public class AuthController {
     public ResponseEntity<String> newPassword(String code,String password,String confirmPassword){
         return ResponseEntity.ok(authorizationService.newPassword(code,password,confirmPassword));
     }
+
+    @PostMapping("ConfirmAccount")
+    public ResponseEntity<String> confirmAccount(String code){
+        return ResponseEntity.ok(authorizationService.confirmPassword(code));
+    }
 }

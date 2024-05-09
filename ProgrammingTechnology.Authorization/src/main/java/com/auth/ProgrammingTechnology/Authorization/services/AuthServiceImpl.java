@@ -48,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
         var account = accountRepository.findByEmailAddress(request.getEmail());
 
         if (account == null) return SignInResponse.builder().errorMessage("Пользователь не найден").build();
+        if (!account.getConfirm()) return SignInResponse.builder().errorMessage("Не подтверждённый пользователь").build();
 
         if(!BCrypt.checkpw(request.getPassword(),account.getPassword_hash())){
             return SignInResponse.builder().errorMessage("Неверный пароль").build();
@@ -97,15 +98,23 @@ public class AuthServiceImpl implements AuthService {
         final String accessToken = tokenManager.generateJwtToken(account.getEmail());
         final String refreshToken = tokenManager.generateRefreshToken(account.getEmail());
 
+        final String confirmCode = BCrypt.hashpw(account.getId().toString(),this.hash).replace("/","s");
+
         var authAccount = AuthAccount.builder().
                 id(account.getId()).
                 role(account.getRole()).
                 email(account.getEmail()).
                 password_hash(account.getPasswordHash()).
                 refreshToken(refreshToken).
+                confirm(false).
+                confirmCode(confirmCode).
                 build();
 
         accountRepository.save(authAccount);
+
+        if (!messageService.sendMessage(authAccount,confirmCode,"Подтверждение почты","confirm")){
+            return SignUpResponse.<Account>builder().errorMessage(List.of("Произошла ошибка")).build();
+        }
 
         return SignUpResponse.<Account>builder().
                 accessToken(accessToken).
@@ -114,6 +123,21 @@ public class AuthServiceImpl implements AuthService {
                 id(authAccount.getId()).
                 userData(account).
                 build();
+    }
+
+    public String confirmPassword(@NonNull String code){
+        var data = code.split("\\.\\.");
+        var uuid = UUID.fromString(data[1]);
+
+        var account = accountRepository.findById(uuid);
+        if (account.isEmpty()){
+            return "Неверный код";
+        }
+
+        account.get().setConfirm(Boolean.TRUE);
+        accountRepository.save(account.get());
+
+        return "Успешно";
     }
 
     public String forgetPassword(@NonNull String email){
@@ -129,7 +153,7 @@ public class AuthServiceImpl implements AuthService {
             accountRepository.save(exist);
         }
 
-        if (!messageService.sendMessage(exist,code)){
+        if (!messageService.sendMessage(exist,code,"Восстановление пароля","password")){
              return "Произошла ошибка";
         }
 
@@ -159,7 +183,7 @@ public class AuthServiceImpl implements AuthService {
             return "Произошла ошибка";
         }
 
-        account.get().setPassword_hash(BCrypt.hashpw(newPassword,this.hash));
+        account.get().setPassword_hash(BCrypt.hashpw(newPassword,this.hash).replace("/","s"));
         account.get().setCode(null);
         accountRepository.save(account.get());
 

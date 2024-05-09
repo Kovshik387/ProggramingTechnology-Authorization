@@ -23,15 +23,29 @@ public class MessageServiceImpl {
     private final TemplateEngine templateEngine;
     @Autowired
     private final Environment environment;
-    public boolean sendMessage(AuthAccount account,String code){
+    public boolean sendMessage(AuthAccount account,String code,String subject, String siteUrl){
         try{
             var mimeMessage = mailSender.createMimeMessage();
             var helper = new MimeMessageHelper(mimeMessage,"UTF-8"){{
                 setTo(account.getEmail());
-                setSubject("Восстановление пароля");
+                setSubject(subject);
             }};
 
-            var url = environment.getProperty("site") + code + ".." + account.getId();
+            String path = "";
+
+            switch (siteUrl)
+            {
+                case "password":
+                    path = environment.getProperty("site.password");
+                    break;
+                case "confirm":
+                    path = environment.getProperty("site.confirm");
+                    break;
+                default:
+                    break;
+            }
+
+            var url = path + code + ".." + account.getId();
 
             System.out.println(url);
             var context = createContext(url);
