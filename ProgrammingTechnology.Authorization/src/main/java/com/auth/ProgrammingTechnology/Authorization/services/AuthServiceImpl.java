@@ -184,7 +184,7 @@ public class AuthServiceImpl implements AuthService {
             return "Произошла ошибка";
         }
 
-        account.get().setPassword_hash(BCrypt.hashpw(newPassword,this.hash).replace("/","s"));
+        account.get().setPassword_hash(BCrypt.hashpw(newPassword,this.hash));
         account.get().setCode(null);
         accountRepository.save(account.get());
 
